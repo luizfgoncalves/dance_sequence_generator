@@ -49,6 +49,12 @@ class DanceFSM:
         }
     def get_valid_step_set(self):
         return self.transitions[self.state]
+    
+    def get_all_steps(self):
+        all_steps = dict()
+        for state_transitions in self.transitions.items():
+            all_steps[state_transitions[0]] = [x for x in state_transitions[1]]
+        return all_steps
 
     def transition(self, step):
         if step in self.transitions[self.state]:

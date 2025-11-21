@@ -32,32 +32,42 @@ if st.sidebar.button("Reiniciar Sequência"):
     st.session_state.sequence = []
     st.session_state.current_state = fsm.state
     st.rerun()
+    # Add a tab for the step catalog
 
-# Display current state
-color = STATE_COLORS.get(st.session_state.current_state, "black")
-st.markdown(f"<h3 style='color:{color}'>Estado Atual: {st.session_state.current_state}</h3>", unsafe_allow_html=True)
+tab1, tab2 = st.tabs(["Gerador de Sequências", "Catálogo de Passos"])
 
-# Get available steps
-available_steps = [x for x in fsm.get_valid_step_set()]
-st.write("Passos disponíveis:", available_steps)
+with tab1:
+    # Display current state
+    color = STATE_COLORS.get(st.session_state.current_state, "black")
+    st.markdown(f"<h3 style='color:{color}'>Estado Atual: {st.session_state.current_state}</h3>", unsafe_allow_html=True)
 
-# User input for the next step
-step = st.selectbox("Selecione o passo desejado (ou deixe a seleção aleatória):", ["Aleatório"] + available_steps)
+    # Get available steps
+    available_steps = [x for x in fsm.get_valid_step_set()]
+    st.write("Passos disponíveis:", available_steps)
 
-# Process the step
-if st.button("Executar Passo"):
-    if step == "Aleatório":
-        step = random.choice(list(available_steps))
-    elif step not in available_steps:
-        st.error("Passo inválido! Tente novamente.")
-    
-    new_state = fsm.transition(step)
-    st.session_state.sequence.append(step)
-    st.session_state.current_state = new_state
-    st.success(f"Passo '{step}' executado com sucesso!")
-    st.rerun()
+    # User input for the next step
+    step = st.selectbox("Selecione o passo desejado (ou deixe a seleção aleatória):", ["Aleatório"] + available_steps)
 
-# Display the sequence
-if st.session_state.sequence:
-    st.subheader("Sequência Completa:")
-    st.write(" → ".join(st.session_state.sequence))
+    # Process the step
+    if st.button("Executar Passo"):
+        if step == "Aleatório":
+            step = random.choice(list(available_steps))
+        elif step not in available_steps:
+            st.error("Passo inválido! Tente novamente.")
+        
+        new_state = fsm.transition(step)
+        st.session_state.sequence.append(step)
+        st.session_state.current_state = new_state
+        st.success(f"Passo '{step}' executado com sucesso!")
+        st.rerun()
+
+    # Display the sequence
+    if st.session_state.sequence:
+        st.subheader("Sequência Completa:")
+        st.write(" → ".join(st.session_state.sequence))
+
+with tab2:
+    st.header("Catálogo de Passos")
+    st.write("Aqui estão todos os passos disponíveis no sistema:")
+    steps_catalog = fsm.get_all_steps()
+    st.write(steps_catalog)
