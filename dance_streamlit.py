@@ -39,7 +39,7 @@ tab1, tab2 = st.tabs(["Gerador de Sequências", "Catálogo de Passos"])
 with tab1:
     # Display current state
     color = STATE_COLORS.get(st.session_state.current_state, "black")
-    st.markdown(f"<h3 style='color:{color}'>Estado Atual: {st.session_state.current_state}</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3>Estado Atual: <span style='color:{color}'>{st.session_state.current_state}</span></h3>", unsafe_allow_html=True)
 
     # Get available steps
     available_steps = [x for x in fsm.get_valid_step_set()]
