@@ -6,10 +6,12 @@ Each state represents a specific dance position.
 class DanceState:
     """Base class for all dance states."""
     
-    def __init__(self, name: str, description: str = "", color: str = "black"):
+    def __init__(self, name: str, description: str = "", color: str = "black", image_path: str = "", image_caption: str = ""):
         self.name = name
         self.description = description
         self.color = color
+        self.image = image_path
+        self.image_caption = image_caption
     
     def __str__(self):
         return self.name
@@ -29,37 +31,49 @@ class DanceState:
 DANCA_FECHADA_ESQUERDA_LIVRE = DanceState(
     "Dança Fechada - Esquerda livre",
     "Posição fechada com a perna esquerda livre",
-    "blue"
+    "blue",
+    "img/danca_fechada_esq.png",
+    "Esquerda Livre"
 )
 
 DANCA_FECHADA_DIREITA_LIVRE = DanceState(
     "Dança Fechada - Direita livre",
     "Posição fechada com a perna direita livre",
-    "cyan"
+    "cyan",
+    "img/danca_fechada_dir.png",
+    "Direita Livre"
 )
 
 DANCA_ABERTA_ESQUERDA_LIVRE_MAO_ESQUERDA = DanceState(
     "Dança Aberta - Esquerda livre - Mão Esquerda",
     "Posição aberta, perna esquerda livre, segurando com a mão esquerda",
-    "green"
+    "green",
+    "img/danca_aberta_esq_me.png",
+    "Esquerda Livre+Esquerda com Direita"
 )
 
 DANCA_ABERTA_DIREITA_LIVRE_MAO_ESQUERDA = DanceState(
     "Dança Aberta - Direita livre - Mão Esquerda",
     "Posição aberta, perna direita livre, segurando com a mão esquerda",
-    "orange"
+    "orange",
+    "img/danca_aberta_dir_me.png",
+    "Direita Livre+Esquerda com Direita"
 )
 
 DANCA_ABERTA_ESQUERDA_LIVRE_MAO_DIREITA = DanceState(
     "Dança Aberta - Esquerda livre - Mão Direita",
     "Posição aberta, perna esquerda livre, segurando com a mão direita",
-    "violet"
+    "violet",
+    "img/danca_aberta_esq_md.png",
+    "Esquerda Livre+Direita com Direita"
 )
 
 DANCA_ABERTA_DIREITA_LIVRE_MAO_DIREITA = DanceState(
     "Dança Aberta - Direita livre - Mão Direita",
     "Posição aberta, perna direita livre, segurando com a mão direita",
-    "red"
+    "red",
+    "img/danca_aberta_dir_md.png",
+    "Direita Livre+Direita com Direita"
 )
 
 # Dictionary mapping state names to state objects
