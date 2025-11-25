@@ -18,6 +18,8 @@ else:
     fsm = DanceFSM(st.session_state.current_state)
 if "current_image" not in st.session_state:
     st.session_state.current_image = fsm.state.image
+if "animations_disabled" not in st.session_state:
+    st.session_state.animations_disabled = False
 
 st.sidebar.header("Configurações")
 if st.sidebar.button("Reiniciar Sequência"):
@@ -27,6 +29,10 @@ if st.sidebar.button("Reiniciar Sequência"):
     st.session_state.current_image = fsm.state.image
     st.rerun()
     # Add a tab for the step catalog
+if st.sidebar.toggle("Desabilitar Animações"):
+    st.session_state.animations_disabled = True
+else:
+    st.session_state.animations_disabled = False
 
 tab1, tab2 = st.tabs(["Gerador de Sequências", "Catálogo de Passos"])
 
@@ -65,9 +71,10 @@ with tab1:
         new_state = fsm.transition(step)
         st.session_state.sequence.append(step)
         st.session_state.current_state = new_state
-        add_step_name_to_image(step)
-        imageholder.image("img/basico_step.png", width="content")
-        time.sleep(1.3)  # Simulate processing delay
+        if not st.session_state.animations_disabled:
+            add_step_name_to_image(step)
+            imageholder.image("img/basico_step.png", width="content")
+            time.sleep(1.3)  # Simulate processing delay
         st.success(f"Passo '{step}' executado com sucesso!")
         st.rerun()
 
@@ -85,11 +92,16 @@ with tab1:
                 sequenceholder.image("img/basico_step.png", width=400)
                 time.sleep(0.8)  # Simulate processing delay
                 temp_fsm.transition(step)
-                sequenceholder.image(temp_fsm.state.image, width=400)
-                
+                sequenceholder.image(temp_fsm.state.image, width=400)               
 
 with tab2:
     st.header("Catálogo de Passos")
     st.write("Aqui estão todos os passos disponíveis no sistema:")
     steps_catalog = fsm.get_all_step_set()
-    st.write(steps_catalog)
+    for state in steps_catalog:
+        with st.expander(f"{state}", expanded=False):
+            steps = steps_catalog[state]
+            for step in steps:
+                #st.write(f"- {step}")
+                with st.expander(f"{step[0]}"):
+                    st.write(f"{step[1]}")

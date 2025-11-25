@@ -65,7 +65,7 @@ class DanceFSM:
         state_steps_mapping = {}
         for state, transitions in all_transitions.items():
             for step, _ in transitions.items():
-                state_steps_mapping.setdefault(state.name, []).append(step.name)
+                state_steps_mapping.setdefault(state.name, []).append((step.name, step.description))
         return state_steps_mapping
 
     def transition(self, step):
