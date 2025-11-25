@@ -1,64 +1,104 @@
+"""
+Dance Finite State Machine (FSM) implementation.
+This module uses the state, step, and transition modules to create a complete FSM.
+"""
+
+from transition import get_next_state, get_valid_transitions, TRANSITIONS
+from state import ALL_STATES, DANCA_FECHADA_ESQUERDA_LIVRE, DanceState
+from step import ALL_STEPS
+
 class DanceFSM:
-    def __init__(self, state="Dança Fechada - Esquerda livre"):
-        self.state = state
-        self.transitions = {
-            "Dança Fechada - Esquerda livre": {
-                "Básico": "Dança Fechada - Direita livre",
-                "Caminhada": "Dança Fechada - Direita livre",
-                "Chapéu": "Dança Fechada - Esquerda livre",
-                "Abertura": "Dança Aberta - Direita livre - Mão Esquerda",
-            },
-            "Dança Fechada - Direita livre": {
-                "Básico": "Dança Fechada - Esquerda livre",
-                "Giro junto": "Dança Fechada - Esquerda livre",
-                "Giro junto com Paulista": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Facão": "Dança Fechada - Esquerda livre",
-            },
-            "Dança Aberta - Esquerda livre - Mão Esquerda": {
-                "Abertura": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Giro conduzido": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Giro conduzido 5": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Quebra de braço": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Chuveirinho": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Meio Costas": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Costas com Costas": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Costas com Costas 1 Mão": "Dança Aberta - Direita livre - Mão Esquerda",
-            },
-            "Dança Aberta - Direita livre - Mão Esquerda": {
-                "Abertura": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Giro condutor": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Fechamento": "Dança Fechada - Esquerda livre",
-                "Giro por trás": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Avião Giro por trás": "Dança Aberta - Esquerda livre - Mão Direita",
-                "Debaixo da portinha": "Dança Aberta - Direita livre - Mão Esquerda",
-                "Manivela": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Manivela 1 Mão": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Giro Ninja": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Panamericano": "Dança Aberta - Esquerda livre - Mão Esquerda",
-                "Panamericano Troca Mão": "Dança Aberta - Esquerda livre - Mão Direita",
-            },
-            "Dança Aberta - Esquerda livre - Mão Direita": {
-                "Giro conduzido": "Dança Aberta - Direita livre - Mão Direita",
-                "Quebra de braço": "Dança Aberta - Esquerda livre - Mão Direita",
-            },
-            "Dança Aberta - Direita livre - Mão Direita": {
-                "Giro condutor": "Dança Aberta - Esquerda livre - Mão Direita",
-                "Giro por trás": "Dança Aberta - Esquerda livre - Mão Direita",
-                "Avião": "Dança Aberta - Esquerda livre - Mão Esquerda",
-            },
-        }
-    def get_valid_step_set(self):
-        return self.transitions[self.state]
+    """Finite State Machine for dance sequence generation."""
     
-    def get_all_steps(self):
-        all_steps = dict()
-        for state_transitions in self.transitions.items():
-            all_steps[state_transitions[0]] = [x for x in state_transitions[1]]
-        return all_steps
+    def __init__(self, state=DANCA_FECHADA_ESQUERDA_LIVRE):
+        """
+        Initialize the FSM with a starting state.
+        
+        Args:
+            state: Initial state name or DanceState object (default: "DANCA_FECHADA_ESQUERDA_LIVRE")
+        """
+        if isinstance(state, str):
+            if state not in ALL_STATES:
+                raise ValueError(f"Invalid initial state: '{state}'")
+            self.state = ALL_STATES[state]
+        elif isinstance(state, DanceState):
+            self.state = state
+        else:
+            raise ValueError(f"Invalid state type: {type(state)}")
+    
+    def get_current_state(self):
+        """
+        Get current state.
+        
+        Returns:
+            Current state object
+        """
+        return self.state
+    
+    def get_all_state_set(self):
+        """
+        Get all available states in the FSM.
+        
+        Returns:
+            List of all state names
+        """
+        return list(ALL_STATES.keys())
+    
+    def get_valid_step_set(self):
+        """
+        Get all valid steps from the current transition mapping.
+        
+        Returns:
+            List of valid step names
+        """
+        transition_map = get_valid_transitions(self.state)
+        return [step.name for step, next_state in transition_map.items()]  
+    
+    def get_all_step_set(self):
+        """
+        Get all available steps for each state in the FSM.
+        
+        Returns:
+            Dictionary mapping state names to lists of valid step names
+        """
+        all_transitions = self.get_all_transition_set()
+        state_steps_mapping = {}
+        for state, transitions in all_transitions.items():
+            for step, _ in transitions.items():
+                state_steps_mapping.setdefault(state.name, []).append(step.name)
+        return state_steps_mapping
 
     def transition(self, step):
-        if step in self.transitions[self.state]:
-            self.state = self.transitions[self.state][step]
-            return self.state
-        else:
-            raise ValueError(f"Invalid step '{step}' for state '{self.state}'")
+        """
+        Perform a state transition based on a step.
+        
+        Args:
+            step: Name of the step to perform (string) or DanceStep object
+            
+        Returns:
+            The new state object after the transition
+            
+        Raises:
+            ValueError: If the step is invalid for the current state
+        """
+        # Convert step to obj if it's an string
+        if isinstance(step, str):
+            if step not in ALL_STEPS:
+                raise ValueError(f"Invalid step: '{step}'")
+            step = ALL_STEPS[step]
+        
+        # Get next state
+        next_state = get_next_state(self.state, step)
+        
+        # Update state to the object
+        self.state = next_state
+        return self.state
+    
+    def get_all_transition_set(self):
+        """
+        Get all transitions in the FSM.
+        
+        Returns:
+            Complete transition dictionary with string names for backward compatibility
+        """
+        return TRANSITIONS

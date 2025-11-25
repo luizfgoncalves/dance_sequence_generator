@@ -3,16 +3,6 @@ from dance_fsm import DanceFSM
 import random
 from colorama import Fore, Style
 
-# Define colors for each state
-STATE_COLORS = {
-    "Dança Fechada - Esquerda livre": "blue",
-    "Dança Fechada - Direita livre": "cyan",
-    "Dança Aberta - Esquerda livre - Mão Esquerda": "green",
-    "Dança Aberta - Esquerda livre - Mão Direita": "yellow",
-    "Dança Aberta - Direita livre - Mão Esquerda": "magenta",
-    "Dança Aberta - Direita livre - Mão Direita": "red",
-}
-
 # Streamlit UI
 st.title("Gerador de Sequências de Dança 💃")
 
@@ -38,8 +28,8 @@ tab1, tab2 = st.tabs(["Gerador de Sequências", "Catálogo de Passos"])
 
 with tab1:
     # Display current state
-    color = STATE_COLORS.get(st.session_state.current_state, "black")
-    st.markdown(f"<h3>Estado Atual: <span style='color:{color}'>{st.session_state.current_state}</span></h3>", unsafe_allow_html=True)
+    color = st.session_state.current_state.color
+    st.markdown(f"<h3>Estado Atual: <span style='color:{color}'>{st.session_state.current_state.name}</span></h3>", unsafe_allow_html=True)
 
     # Get available steps
     available_steps = [x for x in fsm.get_valid_step_set()]
@@ -69,5 +59,5 @@ with tab1:
 with tab2:
     st.header("Catálogo de Passos")
     st.write("Aqui estão todos os passos disponíveis no sistema:")
-    steps_catalog = fsm.get_all_steps()
+    steps_catalog = fsm.get_all_step_set()
     st.write(steps_catalog)
