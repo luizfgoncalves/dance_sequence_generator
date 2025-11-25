@@ -1,7 +1,6 @@
 import streamlit as st
-from dance_fsm import DanceFSM
+from src.dance_fsm import DanceFSM
 import random
-from colorama import Fore, Style
 
 # Streamlit UI
 st.title("Gerador de Sequências de Dança 💃")

@@ -3,9 +3,9 @@ Dance Finite State Machine (FSM) implementation.
 This module uses the state, step, and transition modules to create a complete FSM.
 """
 
-from transition import get_next_state, get_valid_transitions, TRANSITIONS
-from state import ALL_STATES, DANCA_FECHADA_ESQUERDA_LIVRE, DanceState
-from step import ALL_STEPS
+from src.transition import get_next_state, get_valid_transitions, TRANSITIONS
+from src.state import ALL_STATES, DANCA_FECHADA_ESQUERDA_LIVRE, DanceState
+from src.step import ALL_STEPS
 
 class DanceFSM:
     """Finite State Machine for dance sequence generation."""

@@ -3,7 +3,7 @@ Transition mappings for the Dance FSM.
 Defines how states transition based on dance steps.
 """
 
-from state import (
+from src.state import (
     DANCA_FECHADA_ESQUERDA_LIVRE,
     DANCA_FECHADA_DIREITA_LIVRE,
     DANCA_ABERTA_ESQUERDA_LIVRE_MAO_ESQUERDA,
@@ -12,7 +12,7 @@ from state import (
     DANCA_ABERTA_DIREITA_LIVRE_MAO_DIREITA,
     DanceState
 )
-from step import (
+from src.step import (
     BASICO,
     CAMINHADA,
     CHAPEU,
