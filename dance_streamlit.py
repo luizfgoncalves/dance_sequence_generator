@@ -16,10 +16,10 @@ if "current_state" not in st.session_state:
     st.session_state.current_state = fsm.state
 else:
     fsm = DanceFSM(st.session_state.current_state)
-if "current_image" not in st.session_state:
-    st.session_state.current_image = fsm.state.image
 if "animations_disabled" not in st.session_state:
     st.session_state.animations_disabled = False
+
+st.session_state.current_image = fsm.state.image
 
 st.sidebar.header("Configurações")
 if st.sidebar.button("Reiniciar Sequência"):
@@ -47,7 +47,6 @@ with tab1:
     with col1:
         imageholder = st.empty()
         imageholder.image(st.session_state.current_image, width="content")
-        #st.image(imageholder, width="content")
         captions = st.session_state.current_state.image_caption.split("+")
         if len(captions) > 1:
             st.markdown(f"<span style='color:red'>{captions[0]}</span> <span style='color:blue'>{captions[1]}</span>", unsafe_allow_html=True)
